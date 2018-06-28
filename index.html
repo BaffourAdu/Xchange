@@ -11,37 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" 
         integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
-
-    <style>
-        *{
-            font-family: 'Roboto Slab', serif;
-        }
-        nav{
-            background: #41295a;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #2F0743, #41295a);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #2F0743, #41295a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
-        .card{
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
-        .card-footer{
-            border: 0;
-            margin:0;
-            width: 100%;
-            background: #005C97;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #363795, #005C97);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #363795, #005C97); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
-        .thead{
-            color:#ffffff;
-            background: #41295a;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #2F0743, #41295a);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #2F0743, #41295a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
-    </style>
+    <link rel="stylesheet" href="./assets/css/main.css">
 
 </head>
 <body>
@@ -61,16 +31,16 @@
         <div class="row">
             <div class="col-12 col-md-8 offset-md-2">
                 
-                <div class="connectivity-status text-center"></div>
+                <div class="connectivity-status text-center"></div> 
 
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title" style="margin-bottom: 0px;font-weight:500; font-size:18px;">Xchange Operation</h5>
                     </div>
                     <div class="card-body text-center">
-                        <div class="row">
-                                <small class="status text-center"></small>
+                        <small class="status text-center"></small>
 
+                        <div class="row">
                             <div class="col-md-6 col-12 mt-2">
                                 <div class="row">
                                     <div class="input-group col-12" style="padding:0;">
@@ -128,34 +98,34 @@
                                     <tr>
                                         <th scope="col">From</th>
                                         <th scope="col">To</th>
-                                        <th scope="col">Rate</th>
+                                        <th scope="col">Rate / Inverse</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>USD 700</td>
                                         <td>GHS 550</td>
-                                        <td>4.75</td>
+                                        <td>4.755 / 0.255</td>
                                     </tr>
                                     <tr>
                                         <td>USD 700</td>
                                         <td>GHS 550</td>
-                                        <td>4.75</td>
+                                        <td>4.755 / 0.255</td>
                                     </tr>
                                     <tr>
                                         <td>GHS 700</td>
                                         <td>USD 550</td>
-                                        <td>0.47</td>
+                                        <td>4.755 / 0.255</td>
                                     </tr>
                                     <tr>
                                         <td>GHS 700</td>
                                         <td>USD 550</td>
-                                        <td>0.47</td>
+                                        <td>4.755 / 0.255</td>
                                     </tr>
                                     <tr>
                                         <td>GHS 700</td>
                                         <td>USD 550</td>
-                                        <td>0.47</td>
+                                        <td>4.755 / 0.255</td>
                                     </tr>
                                 </tbody>
                         </table>
@@ -166,260 +136,18 @@
     </section>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
-        "use strict";
+    <script src="./assets/js/helpers.js"></script>
+    <script src="./assets/js/main.js"></script>
 
-        const baseUrl = 'https://free.currencyconverterapi.com/api/v5';
-        //Checking If browser supports service workers
+    <script>
+             //Checking If browser supports service workers
         /*
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () =>
                 navigator.serviceWorker.register('serviceWorker.js')
             );
             
-        }*/
-        const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
-            
-                currencies().then(function (response) {
-                    const currencies = response.data.results;
-                    
-                    const sortedCurrencies = sortObj( currencies, 'asc');
-
-                    for (let currency in sortedCurrencies){
-
-                        let fromSelectorNewOption = document.createElement('option'),
-                            toSelectorNewOption = document.createElement('option');
-
-                        fromSelectorNewOption.value = currency;
-                        fromSelectorNewOption.text = currency;
-
-                        toSelectorNewOption.value = currency;
-                        toSelectorNewOption.text = currency;
-
-                        currencyFromSelector.add(fromSelectorNewOption);
-                        currencyToSelector.add(toSelectorNewOption);
-
-                   }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    return false;
-                });
-
-            return true;
-        };
-        
-        const getExchangeRate = (conversionParams) => {
-
-            return axios.get(`${baseUrl}/convert`,
-                    {params: {q: conversionParams}});
-
-        };
-
-        const currencies = (conversionParams) =>{
-
-            return axios.get(`${baseUrl}/currencies`);
-
-        };
-
-        /**
-        * Sort JavaScript Object
-        * CF Webtools : Chris Tierney
-        * obj = object to sort
-        * order = 'asc' or 'desc'
-        */
-        const sortObj = ( obj, order ) => {
-            
-
-            let key,
-                tempArry = [],
-                i,
-                tempObj = {};
-
-            for ( key in obj ) {
-                tempArry.push(key);
-            }
-
-            tempArry.sort(
-                (a, b) => {
-                    return a.toLowerCase().localeCompare( b.toLowerCase() );
-                }
-            );
-
-            if( order === 'desc' ) {
-                for ( i = tempArry.length - 1; i >= 0; i-- ) {
-                    tempObj[ tempArry[i] ] = obj[ tempArry[i] ];
-                }
-            } else {
-                for ( i = 0; i < tempArry.length; i++ ) {
-                    tempObj[ tempArry[i] ] = obj[ tempArry[i] ];
-                }
-            }
-
-            return tempObj;
-        };
-
-
-        window.addEventListener('load', () => {
-
-            //Checking User Connectivity Status
-            window.addEventListener('online', () => {
-                document.querySelector('.connectivity-status').innerText = 'You are online';
-            });
-            
-            window.addEventListener('offline', () => {
-                document.querySelector('.connectivity-status').innerText = 'You are offline';
-            });
-
-            const currencyFromSelector = document.querySelector('.custom-select.currency-from'),
-                currencyToSelector = document.querySelector('.custom-select.currency-to'),
-                currencyFromInput = document.querySelector('.form-control.currency-from'),
-                currencyToInput = document.querySelector('.form-control.currency-to'),
-                exchangeRate = document.querySelector('.exchange-rate'),
-                exchangeRateInverse = document.querySelector('.exchange-rate-inverse');
-            
-            let currencyTo = currencyToSelector.value,
-                  currencyFrom = currencyFromSelector.value; 
-            
-            let conversionParams = null,
-            conversionParamsInverse = null;
-
-            document.querySelector('.status').innerText = 'Please wait as currencies load ...';
-
-            currencyFromSelector.disabled = true;
-            currencyToSelector.disabled = true;
-            currencyFromInput.disabled = true;
-            currencyToInput.disabled = true;
-
-
-            const currencyPopulated = populateCurrencies(currencyFromSelector, currencyToSelector);
-            exchangeRate.innerText = '00.00';
-            exchangeRateInverse.innerText = '00.00';
-
-
-            if (currencyPopulated) {
-                
-                document.querySelector('.status').innerText = 'Please select Currency from';
-                currencyFromSelector.disabled = false;
-
-                currencyFromSelector.addEventListener('change', () => {
-                    let rate = null;
-                    let inverseRate = null;
-
-                    currencyFrom = currencyFromSelector.value; 
-
-                    document.querySelector('.status').innerText = 'Please select Currency To';
-                    currencyToSelector.disabled = false;
-
-                    if ( currencyTo != 'To') {
-                        conversionParams = `${currencyFrom}_${currencyTo}`;
-                        conversionParamsInverse = `${currencyTo}_${currencyFrom}`;
-
-
-                        if (currencyTo != currencyFrom ) {
-
-                            getExchangeRate(conversionParams)
-                                .then(function (response) {
-                                    exchangeRate.innerText = '';
-                                    const responseRate = response.data.results[conversionParams].val;
-                                    rate = responseRate.toFixed(3);
-
-                                    exchangeRate.innerText = `1 ${currencyFrom} -> ${rate.toString()} ${currencyTo}`;
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                    exchangeRate.innerText = '';
-                                });
-                                        
-
-                            getExchangeRate(conversionParamsInverse)
-                                .then(function (response) {
-                                    const responseRateInverse = response.data.results[conversionParamsInverse].val;
-                                    inverseRate = responseRateInverse.toFixed(3);
-
-                                    exchangeRateInverse.innerText = `1 ${currencyTo} -> ${inverseRate.toString()} ${currencyFrom}`;
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                    exchangeRateInverse.innerText = '';
-                                });
-                        }
-
-                    }
-
-                    currencyToSelector.addEventListener('change', () => {
-                        currencyTo = currencyToSelector.value; 
-
-                            if ( currencyFrom != 'From') {
-                                conversionParams = `${currencyFrom}_${currencyTo}`;
-                                conversionParamsInverse = `${currencyTo}_${currencyFrom}`;
-
-
-                                if (currencyTo != currencyFrom ) {
-
-                                    getExchangeRate(conversionParams)
-                                        .then(function (response) {
-                                            exchangeRate.innerText = '';
-                                            const responseRate = response.data.results[conversionParams].val;
-                                            rate = responseRate.toFixed(3);
-
-                                            exchangeRate.innerText = `1 ${currencyFrom} -> ${rate.toString()} ${currencyTo}`;
-                                        })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                            exchangeRate.innerText = '';
-                                        });
-                                                
-
-                                    getExchangeRate(conversionParamsInverse)
-                                        .then(function (response) {
-                                            const responseRateInverse = response.data.results[conversionParamsInverse].val;
-                                            inverseRate = responseRateInverse.toFixed(3);
-
-                                            exchangeRateInverse.innerText = `1 ${currencyTo} -> ${inverseRate.toString()} ${currencyFrom}`;
-                                        })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                            exchangeRateInverse.innerText = '';
-                                        });
-                                }
-                                    
-                                    document.querySelector('.status').innerText = 'Please type amount you wish to exchange';
-                                    currencyFromInput.disabled = false;
-                            }
-
-
-
-                            currencyFromInput.addEventListener('input', () => {
-                                const amountFrom = currencyFromInput.value;
-                                const amountTo = amountFrom * rate;
-
-                                currencyToInput.value = amountTo;
-
-                                document.querySelector('.status').innerText = ' ';
-                                currencyToInput.disabled = false;
-
-                            });
-
-
-                        currencyToInput.addEventListener('input', () => {
-                                const amountTo = currencyToInput.value;
-                                const amountFrom = amountTo * inverseRate;
-
-                                currencyFromInput.value = amountFrom;
-
-                                document.querySelector('.status').innerText = ' ';
-                        });
-
-                    });
-                });
-
-                
-            }
-
-        });
-        
-        
+        }*/   
 
 
     </script>
