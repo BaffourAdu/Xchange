@@ -12,10 +12,6 @@ const cachedFiles = [
     '/assets/js/main.js'
 ];
 
-//Variables to hold Network files
-const networkFiles = [
-];
-
 
 /**
  * Installing Service Worker
@@ -60,23 +56,13 @@ self.addEventListener('activate', event => {
  * and update cache. Fetch from cache if offline
  */
 self.addEventListener('fetch', event => {
-    console.log(networkFiles);
-
-    if (networkFiles.filter(item => event.request.url.match(item)).length) {
-        console.log('[network fetch]', event.request.url);
-        event.respondWith(
-            caches.match(event.request)
-                .then(response => response || fetch(event.request))
-        );
-    } else {
         console.log('[pwa fetch]', event.request.url);
         event.respondWith(
             caches.match(event.request)
                 .then(response => {
-                    let responseClone = response.clone();
-                    caches.open(cacheVersion).then(cache => cache.put(event.request, responseClone));
+                    caches.open(cacheVersion).then(cache => cache.put(event.request, response));
                     return response || fetch(event.request);
                 })
         );
-    }
+    
 });
