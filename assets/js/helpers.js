@@ -39,31 +39,19 @@ return true;
  * 
  * @param {*} conversionParams 
  */
-const calculateExchangeRate = (conversionParams) => {
-    return getExchangeRate(conversionParams)
+const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
+
+    return getExchangeRate(conversionParams, conversionParamsInverse)
         .then(function (response) {
+            console.log(response);
+
             const responseRate = response.data.results[conversionParams].val;
             const rate = responseRate.toFixed(3);
 
-            return rate;
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
-
-
-/**
- * 
- * @param {*} conversionParamsInverse 
- */
-const calculateExchangeRateInverse = (conversionParamsInverse) => {
-    return getExchangeRate(conversionParamsInverse)
-        .then(function (response) {
             const responseRateInverse = response.data.results[conversionParamsInverse].val;
-            const inverseRate = responseRateInverse.toFixed(3);
+            const rateInverse = responseRateInverse.toFixed(3);
 
-            return inverseRate;
+            return [rate, rateInverse];
         })
         .catch(function (error) {
             console.log(error);
@@ -75,11 +63,10 @@ const calculateExchangeRateInverse = (conversionParamsInverse) => {
  * 
  * @param {*} conversionParams 
  */
-const getExchangeRate = (conversionParams) => {
+const getExchangeRate = (conversionParams, conversionParamsInverse) => {
 
-return axios.get(`${baseUrl}/convert`,
-        {params: {q: conversionParams}});
-
+    return axios.get(`${baseUrl}/convert`,
+        {params: {q: `${conversionParams},${conversionParamsInverse}`}});
 };
 
 
@@ -92,6 +79,7 @@ const currencies = (conversionParams) =>{
 return axios.get(`${baseUrl}/currencies`);
 
 };
+
 
 /**
 * Sort JavaScript Object

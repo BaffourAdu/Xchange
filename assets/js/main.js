@@ -100,21 +100,12 @@ window.addEventListener('load', () => {
                    /*
                     *  Get the Exchange Rate
                     */
-                    calculateExchangeRate(conversionParams)                                
-                        .then((rate) => {       
+                   calculateExchangeRate(conversionParams, conversionParamsInverse)                                
+                   .then((rate) => {       
                             exchangeRate = rate;
                             exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${rate.toString()} ${currencyTo}`;
                         });
 
-                    /*
-                    *  Get the Inverse Exchange Rate
-                    *  to allow users to convert currency in both ways
-                    */
-                    calculateExchangeRateInverse(conversionParamsInverse)
-                        .then((inverseRate) => {
-                            exchangeRateInverse =  inverseRate;
-                            exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${inverseRate.toString()} ${currencyFrom}`;
-                        });
                 }
 
             }
@@ -140,24 +131,19 @@ window.addEventListener('load', () => {
                         exchangeRateOutput.innerText = '';
                         exchangeRateInverseOutput.innerText = '';
 
-                        /*
+                            /*
                             *  Get the Exchange Rate
                             */
-                            calculateExchangeRate(conversionParams)                                
-                            .then((rate) => {       
-                                exchangeRate = rate;
-                                exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${rate.toString()} ${currencyTo}`;
+                            calculateExchangeRate(conversionParams, conversionParamsInverse)                                
+                            .then((rates) => {       
+                                exchangeRate = rates[0];
+                                exchangeRateInverse = rates[1];
+
+                                exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${rates[0].toString()} ${currencyTo}`;
+                                exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${rates[1].toString()} ${currencyFrom}`;
+
                             });
                     
-                            /*
-                            *  Get the Inverse Exchange Rate
-                            *  to allow users to convert currency in both ways
-                            */
-                            calculateExchangeRateInverse(conversionParamsInverse)
-                                .then((inverseRate) => {
-                                exchangeRateInverse =  inverseRate;
-                                exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${inverseRate.toString()} ${currencyFrom}`;
-                                });
                         }
                         
                     document.querySelector('.status').innerText = 'Please type amount you wish to exchange';
