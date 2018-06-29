@@ -73,7 +73,8 @@ self.addEventListener('fetch', event => {
         event.respondWith(
             caches.match(event.request)
                 .then(response => {
-                    caches.open(cacheVersion).then(cache => cache.put(event.request.url));
+                    let responseClone = response.clone();
+                    caches.open(cacheVersion).then(cache => cache.put(event.request, responseClone));
                     return response || fetch(event.request);
                 })
         );
