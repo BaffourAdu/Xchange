@@ -51,8 +51,8 @@ self.addEventListener('activate', event => {
 /**
  * Fetching a Resource
  * ----------------------
- * If network is available fetch network Resource
- * and update cache. Fetch from cache if offline
+ * Fetch from cache if offline and If network is available 
+ * fetch network Resource and update cache else 
  */
 self.addEventListener('fetch', event => {
         console.log('[fetching]', event.request.url);
