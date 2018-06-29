@@ -61,7 +61,7 @@ self.addEventListener('activate', event => {
  */
 self.addEventListener('fetch', event => {
     console.log(networkFiles);
-    
+
     if (networkFiles.filter(item => event.request.url.match(item)).length) {
         console.log('[network fetch]', event.request.url);
         event.respondWith(
@@ -73,7 +73,7 @@ self.addEventListener('fetch', event => {
         event.respondWith(
             caches.match(event.request)
                 .then(response => {
-                    caches.open(cacheVersion).then(cache => cache.add(event.request.url));
+                    caches.open(cacheVersion).then(cache => cache.put(event.request.url));
                     return response || fetch(event.request);
                 })
         );
