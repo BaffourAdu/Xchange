@@ -55,7 +55,7 @@ self.addEventListener('activate', event => {
  * and update cache. Fetch from cache if offline
  */
 self.addEventListener('fetch', event => {
-        console.log('[pwa fetch]', event.request.url);
+        console.log('[fetching]', event.request.url);
         event.respondWith(
             caches.match(event.request)
                 .then(response => {
