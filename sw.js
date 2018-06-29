@@ -65,11 +65,3 @@ self.addEventListener('fetch', event => {
         );
     
 });
-
-function addToCache(request, response) {
-    var copy = response.clone();
-    caches.open(version)
-          .then(function (cache) {
-              cache.put(request, copy);
-          });
-}
