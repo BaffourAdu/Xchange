@@ -59,9 +59,17 @@ self.addEventListener('fetch', event => {
         event.respondWith(
             caches.match(event.request)
                 .then(response => {
-                    caches.open(cacheVersion).then(cache => cache.put(event.request, response.clone()));
+                    caches.open(cacheVersion).then(cache => cache.add(event.request));
                     return response || fetch(event.request);
                 })
         );
     
 });
+
+function addToCache(request, response) {
+    var copy = response.clone();
+    caches.open(version)
+          .then(function (cache) {
+              cache.put(request, copy);
+          });
+}
