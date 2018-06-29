@@ -43,7 +43,6 @@ const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
 
     return getExchangeRate(conversionParams, conversionParamsInverse)
         .then(function (response) {
-            console.log(response);
 
             const responseRate = response.data.results[conversionParams].val;
             const rate = responseRate.toFixed(3);
