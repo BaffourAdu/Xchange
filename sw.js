@@ -16,7 +16,14 @@ const cachedFiles = [
 const networkFiles = [
 ];
 
-//Installing Service Worker
+
+/**
+ * Installing Service Worker
+ * ----------------------------
+ * Install Service Worker by adding all urls
+ * to be cached to the cache. Urls to be cached 
+ * are store in the variable cachedFiles
+ */
 self.addEventListener('install', event => {
     console.log('[installing worker]');
     event.waitUntil(
@@ -26,7 +33,12 @@ self.addEventListener('install', event => {
     );
 });
 
-//Activating Service Worker
+/**
+ * Activate Worker
+ * -------------------------
+ * If cache is has been updated then
+ * delete old cache and update it with new version
+ */
 self.addEventListener('activate', event => {
     console.log('[activating worker]');
     event.waitUntil(
@@ -40,11 +52,24 @@ self.addEventListener('activate', event => {
     return self.clients.claim();
 });
 
-//Fetch from cache or network
+
+/**
+ * Fetching a Resource
+ * ----------------------
+ * If network is available fetch network Resource
+ * and update cache. Fetch from cache if offline
+ */
 self.addEventListener('fetch', event => {
-    //First Cache first
-    if (!networkFiles.filter(item => event.request.url.match(item)).length) {
-        console.log('[fetching cache]', event.request.url);
+    console.log(networkFiles);
+    
+    if (networkFiles.filter(item => event.request.url.match(item)).length) {
+        console.log('[network fetch]', event.request.url);
+        event.respondWith(
+            caches.match(event.request)
+                .then(response => response || fetch(event.request))
+        );
+    } else {
+        console.log('[pwa fetch]', event.request.url);
         event.respondWith(
             caches.match(event.request)
                 .then(response => {
@@ -52,12 +77,5 @@ self.addEventListener('fetch', event => {
                     return response || fetch(event.request);
                 })
         );
-    } else {
-        console.log('[fetching network]', event.request.url);
-        event.respondWith(
-            caches.match(event.request)
-                .then(response => response || fetch(event.request))
-        );
-
     }
 });

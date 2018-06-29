@@ -140,9 +140,16 @@
     <script>
         //If browser supports service workers Register Service worker when browser loads 
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () =>
+            window.addEventListener('load', () => { 
                 navigator.serviceWorker.register('sw.js')
-            );
+                .then((reg) => {
+                    // registration worked
+                    console.log('Registration succeeded.');
+                }).catch((error) => {
+                    // registration failed
+                    console.log('Registration failed');
+                });
+            });
             
         } 
     </script>
