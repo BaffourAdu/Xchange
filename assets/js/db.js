@@ -3,30 +3,30 @@
 const dbPromise = idb.open('currenci', 1, (upgradeDb) => {
     console.log('creating DB');
     if (!upgradeDb.objectStoreNames.contains('convertion')) {
-        upgradeDb.createObjectStore('convertion', {autoIncrement: true});
+        const convertionStore = upgradeDb.createObjectStore('convertion', { keyPath: 'id', autoIncrement:true });
+        convertionStore.createIndex('id', 'id', { unique: true });
     }
     if (!upgradeDb.objectStoreNames.contains('currency')) {
-        upgradeDb.createObjectStore('currency', {autoIncrement: true});
+        const currencyStore = upgradeDb.createObjectStore('currency', { keyPath: 'id', autoIncrement:true });
+        currencyStore.createIndex('id', 'id', { unique: true });
     }
 });
 
-dbPromise.then((db) => {
+dbPromise.then(db => {
     const tx = db.transaction('convertion', 'readwrite');
-    const store = tx.objectStore('convertion');
-    
-    const convertion = {
-      from: 'USD 700',
-      to: 'GHS 550',
-      rate: '4.755 / 0.255',
-      created: new Date().getTime()
-    };
-
-    store.add(convertion);
-
+    tx.objectStore('convertion').put({
+        data: {
+          from: 'USD 700',
+          to: 'GHS 550',
+          rate: '4.755 / 0.255',
+          created: new Date().getTime()
+        }
+    });
     return tx.complete;
-}).then(function() {
+  }).then(function() {
     console.log('added item to the store Convertion!');
 });
+
 /*
 dbPromise.then((db) => {
     const tx = db.transaction('convertion', 'readonly');
