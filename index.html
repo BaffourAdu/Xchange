@@ -149,7 +149,6 @@
         </div>
     </section>
 
-    <script src="./assets/js/idb.js"></script>
     <script>
         
         window.addEventListener('load', () => { 
@@ -169,22 +168,13 @@
             if (!('indexedDB' in window)) {
                 console.log('This browser doesn\'t support IndexedDB');
                 return;
-            }else{
-                const dbPromise = idb.open('currenci', 1, (upgradeDb) => {
-                    console.log('creating DB');
-                    if (!upgradeDb.objectStoreNames.contains('convertion')) {
-                        upgradeDb.createObjectStore('convertion', {autoIncrement: true});
-                    }
-                    if (!upgradeDb.objectStoreNames.contains('currency')) {
-                        upgradeDb.createObjectStore('currency', {autoIncrement: true});
-                    }
-                });
             }
 
         });
         
     </script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./assets/js/idb.js"></script>
     <script src="./assets/js/db.js"></script>
     <script src="./assets/js/helpers.js"></script>
     <script src="./assets/js/main.js"></script>
