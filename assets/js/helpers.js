@@ -1,3 +1,5 @@
+import idb from './db';
+
 /**
  * 
  * @param {*} currencyFromSelector 
@@ -18,7 +20,7 @@ const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
             };
 
             idb.set('currency', currency);
-            
+
             let fromSelectorNewOption = document.createElement('option'),
                 toSelectorNewOption = document.createElement('option');
 
