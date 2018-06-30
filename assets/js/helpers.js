@@ -17,7 +17,9 @@ const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
                 created: new Date().getTime()
             };
 
-            idbDb.set('currency', currency);
+            let currencyData = {data};
+
+            idbDb.set('currency', currencyData);
 
             let fromSelectorNewOption = document.createElement('option'),
                 toSelectorNewOption = document.createElement('option');
