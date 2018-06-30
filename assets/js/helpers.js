@@ -1,11 +1,9 @@
-import idbDb from './db';
-
 /**
  * 
  * @param {*} currencyFromSelector 
  * @param {*} currencyToSelector 
  */
-export const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
+const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
             
     currencies().then(function (response) {
         const currencies = response.data.results;
