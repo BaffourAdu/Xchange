@@ -1,4 +1,4 @@
-import idb from './db';
+import idbDb from './db';
 
 /**
  * 
@@ -19,7 +19,7 @@ const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
                 created: new Date().getTime()
             };
 
-            idb.set('currency', currency);
+            idbDb.set('currency', currency);
 
             let fromSelectorNewOption = document.createElement('option'),
                 toSelectorNewOption = document.createElement('option');

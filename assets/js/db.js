@@ -15,7 +15,7 @@ const dbPromise = idb.open('currenci', 1, upgradeDb => {
     }
 });
 
-const idb = {
+export const idbDb = {
     get(objectStore, key) {
       return dbPromise.then(db => {
         return db.transaction('keyval')
