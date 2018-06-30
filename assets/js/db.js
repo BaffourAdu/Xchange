@@ -1,8 +1,8 @@
 "use strict";
 
-const dbPromise = idb.open('currenci', 1, (upgradeDb) => {
+const dbPromise = idb.open('currenci', 1, upgradeDb => {
     console.log('creating DB');
-    switch (upgradeDB.oldVersion) {
+    switch (upgradeDb.oldVersion) {
         case 0:
             if (!upgradeDb.objectStoreNames.contains('convertion')) {
                 const convertionStore = upgradeDb.createObjectStore('convertion', { keyPath: 'id', autoIncrement:true });
