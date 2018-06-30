@@ -2,16 +2,22 @@
 
 const dbPromise = idb.open('currenci', 1, (upgradeDb) => {
     console.log('creating DB');
-    if (!upgradeDb.objectStoreNames.contains('convertion')) {
-        const convertionStore = upgradeDb.createObjectStore('convertion', { keyPath: 'id', autoIncrement:true });
-        convertionStore.createIndex('id', 'id', { unique: true });
-    }
-    if (!upgradeDb.objectStoreNames.contains('currency')) {
-        const currencyStore = upgradeDb.createObjectStore('currency', { keyPath: 'id', autoIncrement:true });
-        currencyStore.createIndex('id', 'id', { unique: true });
+    switch (upgradeDB.oldVersion) {
+        case 0:
+            if (!upgradeDb.objectStoreNames.contains('convertion')) {
+                const convertionStore = upgradeDb.createObjectStore('convertion', { keyPath: 'id', autoIncrement:true });
+                convertionStore.createIndex('id', 'id', { unique: true });
+            }
+            if (!upgradeDb.objectStoreNames.contains('currency')) {
+                const currencyStore = upgradeDb.createObjectStore('currency', { keyPath: 'id', autoIncrement:true });
+                currencyStore.createIndex('id', 'id', { unique: true });
+            }  
     }
 });
 
+/**
+ * Insert to DB
+ */
 dbPromise.then(db => {
     const tx = db.transaction('convertion', 'readwrite');
     tx.objectStore('convertion').put({
@@ -27,16 +33,6 @@ dbPromise.then(db => {
     console.log('added item to the store Convertion!');
 });
 
-/*
-dbPromise.then((db) => {
-    const tx = db.transaction('convertion', 'readonly');
-    const store = tx.objectStore('convertion');
-    
-    return store.get('1');
-  }).then(function(val) {
-    console.dir(val);
-  });
-*/
 
 dbPromise.then((db) => {
     const tx = db.transaction('convertion', 'readonly');
@@ -46,3 +42,19 @@ dbPromise.then((db) => {
   }).then((convertions) => {
     console.log(`Items by name: ${convertions}`);
 });
+
+/**
+ * Read All From DB
+ */
+dbPromise.then(db => {
+    return db.transaction('convertion')
+      .objectStore('convertion').getAll();
+  }).then(convertions => console.log(convertions));
+
+  /**
+   * Get Single Record
+   */
+  dbPromise.then(db => {
+    return db.transaction('convertion')
+      .objectStore('convertion').get(1);
+  }).then(convertion => console.log(convertion));
