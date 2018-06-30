@@ -11,7 +11,14 @@ const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
         const sortedCurrencies = sortObj( currencies, 'asc');
 
         for (let currency in sortedCurrencies){
+            
+            let data = {
+                name: currency,
+                created: new Date().getTime()
+            };
 
+            idb.set('currency', currency);
+            
             let fromSelectorNewOption = document.createElement('option'),
                 toSelectorNewOption = document.createElement('option');
 
@@ -43,6 +50,7 @@ const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
 
     return getExchangeRate(conversionParams, conversionParamsInverse)
         .then(function (response) {
+            console.log(response);
 
             const responseRate = response.data.results[conversionParams].val;
             const rate = responseRate.toFixed(3);
@@ -56,6 +64,7 @@ const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
             console.log(error);
         });
 }
+
 
 
 /**
@@ -78,7 +87,6 @@ const currencies = (conversionParams) =>{
 return axios.get(`${baseUrl}/currencies`);
 
 };
-
 
 /**
 * Sort JavaScript Object
