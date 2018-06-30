@@ -1,5 +1,8 @@
 "use strict";
         
+import populateCurrencies from './helpers';
+
+
 //Currency Convertor API BASEURL
 const baseUrl = 'https://free.currencyconverterapi.com/api/v5';
 
