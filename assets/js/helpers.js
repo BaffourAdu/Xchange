@@ -1,3 +1,5 @@
+import idb from './db';
+
 /**
  * 
  * @param {*} currencyFromSelector 
