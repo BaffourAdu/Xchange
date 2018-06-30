@@ -9,7 +9,9 @@ const cachedFiles = [
     '/assets/css/bootstrap.min.css',
     'https://fonts.googleapis.com/css?family=Roboto+Slab',
     '/assets/js/helpers.js',
-    '/assets/js/main.js'
+    '/assets/js/main.js',
+    '/assets/js/idb.js',
+    '/assets/js/db.js'
 ];
 
 
