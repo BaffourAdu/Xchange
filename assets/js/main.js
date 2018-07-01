@@ -117,7 +117,18 @@ window.addEventListener('load', () => {
 
                             });
                     } else {
-                        
+                        idbDb.get('rates', conversionParams)
+                            .then(oldRates => {
+
+                                exchangeRate = oldRates.rates.rate;
+                                exchangeRateInverse = oldRates.rates.inverse;
+
+                                exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${exchangeRate.toString()} ${currencyTo}`;
+                                exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${exchangeRateInverse.toString()} ${currencyFrom}`;
+
+                                //Load Previous Rates
+                                loadOldRates();
+                            });
                     }
                     
 
@@ -147,21 +158,36 @@ window.addEventListener('load', () => {
                         exchangeRateOutput.innerText = '';
                         exchangeRateInverseOutput.innerText = '';
 
-                            /*
-                            *  Get the Exchange Rate
-                            */
-                            calculateExchangeRate(conversionParams, conversionParamsInverse)                                
-                                .then((rates) => {       
-                                    exchangeRate = rates[0];
-                                    exchangeRateInverse = rates[1];
-
-                                    exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${rates[0].toString()} ${currencyTo}`;
-                                    exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${rates[1].toString()} ${currencyFrom}`;
-
-                                    //Load Previous Rates
-                                    loadOldRates();
-
-                                });
+                            if(navigator.onLine) { 
+                                /*
+                                *  Get the Exchange Rate
+                                */
+                                calculateExchangeRate(conversionParams, conversionParamsInverse)                                
+                                    .then((rates) => {       
+                                        exchangeRate = rates[0];
+                                        exchangeRateInverse = rates[1];
+        
+                                        exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${rates[0].toString()} ${currencyTo}`;
+                                        exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${rates[1].toString()} ${currencyFrom}`;
+        
+                                        //Load Previous Rates
+                                        loadOldRates();
+        
+                                    });
+                            } else {
+                                idbDb.get('rates', conversionParams)
+                                    .then(oldRates => {
+            
+                                        exchangeRate = oldRates.rates.rate;
+                                        exchangeRateInverse = oldRates.rates.inverse;
+            
+                                        exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${exchangeRate.toString()} ${currencyTo}`;
+                                        exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${exchangeRateInverse.toString()} ${currencyFrom}`;
+            
+                                        //Load Previous Rates
+                                        loadOldRates();
+                                    });
+                            }
                     
                         }
                         
