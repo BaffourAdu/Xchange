@@ -18,8 +18,8 @@ const dbPromise = idb.open('currenci', 1, upgradeDb => {
 const idbDb = {
     get(objectStore, key) {
       return dbPromise.then(db => {
-        return db.transaction('keyval')
-          .objectStore('keyval').get(key);
+        return db.transaction(objectStore)
+          .objectStore(objectStore).get(key);
       });
     },
     set(objectStore, val) {
@@ -29,25 +29,31 @@ const idbDb = {
         return tx.complete;
       });
     },
-    delete(key) {
+    delete(objectStore,key) {
       return dbPromise.then(db => {
-        const tx = db.transaction('keyval', 'readwrite');
-        tx.objectStore('keyval').delete(key);
+        const tx = db.transaction(objectStore, 'readwrite');
+        tx.objectStore(objectStore).delete(key);
         return tx.complete;
       });
     },
-    clear() {
+    clear(objectStore) {
       return dbPromise.then(db => {
-        const tx = db.transaction('keyval', 'readwrite');
-        tx.objectStore('keyval').clear();
+        const tx = db.transaction(objectStore, 'readwrite');
+        tx.objectStore(objectStore).clear();
         return tx.complete;
       });
     },
-    keys() {
+    getAll(objectStore) {
+        dbPromise.then(db => {
+            return db.transaction(objectStore)
+              .objectStore(objectStore).getAll();
+        });
+    },
+    keys(objectStore) {
       return dbPromise.then(db => {
-        const tx = db.transaction('keyval');
+        const tx = db.transaction(objectStore);
         const keys = [];
-        const store = tx.objectStore('keyval');
+        const store = tx.objectStore(objectStore);
   
         // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
         // openKeyCursor isn't supported by Safari, so we fall back

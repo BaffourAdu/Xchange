@@ -19,7 +19,10 @@ const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
 
             let currencyData = {data};
 
+            //Store in IndexedDB
             idbDb.set('currency', currencyData);
+            idbDb.getAll('currency').then(convertions => console.log(convertions));
+
 
             let fromSelectorNewOption = document.createElement('option'),
                 toSelectorNewOption = document.createElement('option');
