@@ -18,17 +18,18 @@ const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
             };
 
             let currencyData = {data};
+            let currencyName = sortedCurrencies[currency].currencyName;
+            let currencySymbol = sortedCurrencies[currency].currencySymbol;
+
 
             //Store in IndexedDB
             idbDb.set('currency', currencyData);
-            idbDb.getAll('currency').then(convertions => console.log(convertions));
-
 
             let fromSelectorNewOption = document.createElement('option'),
                 toSelectorNewOption = document.createElement('option');
 
             fromSelectorNewOption.value = currency;
-            fromSelectorNewOption.text = currency;
+            fromSelectorNewOption.text = `${currency} - ${currencyName}`;
 
             toSelectorNewOption.value = currency;
             toSelectorNewOption.text = currency;
@@ -37,6 +38,9 @@ const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
             currencyToSelector.add(toSelectorNewOption);
 
        }
+
+        idbDb.getAll('currency').then(convertions => console.log(convertions));
+
     })
     .catch(function (error) {
         console.log(error);
@@ -55,8 +59,6 @@ const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
 
     return getExchangeRate(conversionParams, conversionParamsInverse)
         .then(function (response) {
-            console.log(response);
-
             const responseRate = response.data.results[conversionParams].val;
             const rate = responseRate.toFixed(3);
 

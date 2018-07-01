@@ -11,6 +11,7 @@ const dbPromise = idb.open('currenci', 1, upgradeDb => {
             if (!upgradeDb.objectStoreNames.contains('currency')) {
                 const currencyStore = upgradeDb.createObjectStore('currency', { keyPath: 'id', autoIncrement:true });
                 currencyStore.createIndex('id', 'id', { unique: true });
+                currencyStore.createIndex('name', 'name', { unique: true });
             }  
     }
 });
