@@ -16,11 +16,11 @@ window.addEventListener('load', () => {
         document.querySelector('.connectivity-status').innerText = 'You are offline';
     });
 
-    //Load Previous Rates
+    //Load Previous Calculated Rates/Convertions
     loadOldRates();
     
     /*
-    * Set initial Varibales & get all Inputs And assign them variables
+    * Set initial Varibales , get all Inputs and assign them variables
     */
     const currencyFromSelector = document.querySelector('.custom-select.currency-from'),
         currencyToSelector = document.querySelector('.custom-select.currency-to'),
@@ -53,18 +53,18 @@ window.addEventListener('load', () => {
     exchangeRateOutput.innerText = '00.00';
     exchangeRateInverseOutput.innerText = '00.00';
 
-    //Populate Currencies
+    //Populate Currencies From the DB
     const currencyPopulated = populateCurrencies(currencyFromSelector, currencyToSelector);
 
     /*
     * If Currencies Populated,
-    * THen allow user to perform Currency COnversion
+    * Then allow user to perform Currency COnversion
     */
     if (currencyPopulated) {
         //Enable Currency From Select Input
         currencyFromSelector.disabled = false;
 
-        //Update User set select Currency to be Converted from
+        //Update User to set select Currency to be Converted from
         document.querySelector('.status').innerText = 'Please select Currency from';
         
         /*
@@ -84,7 +84,7 @@ window.addEventListener('load', () => {
             * Perform Calculations only when Currency 
             * to be converted to default value Changes
             */
-            if ( currencyTo != 'To') {
+            if (currencyTo != 'To') {
 
                 //Set Currency Conversion Parameter to be sent to the API
                 conversionParams = `${currencyFrom}_${currencyTo}`;
@@ -102,7 +102,8 @@ window.addEventListener('load', () => {
 
                    if(navigator.onLine) { 
                         /*
-                        *  Get the Exchange Rate
+                        *  If User is Online, 
+                        * then Get the Exchange Rate from API
                         */
                         calculateExchangeRate(conversionParams, conversionParamsInverse)                                
                             .then((rates) => {       
@@ -117,8 +118,11 @@ window.addEventListener('load', () => {
 
                             });
                     } else {
+                        /**
+                         * Check If Rate has been converted before else
+                         */
                         idbDb.get('rates', conversionParams)
-                            .then(oldRates => {
+                            .then((oldRates) => {
 
                                 exchangeRate = oldRates.rates.rate;
                                 exchangeRateInverse = oldRates.rates.inverse;
@@ -128,6 +132,9 @@ window.addEventListener('load', () => {
 
                                 //Load Previous Rates
                                 loadOldRates();
+                            })
+                            .catch((error) =>{
+                                console.log(error);
                             });
                     }
                     
@@ -146,7 +153,7 @@ window.addEventListener('load', () => {
             //Get Currency To Input Value
             currencyTo = currencyToSelector.value; 
 
-                if ( currencyFrom != 'From') {
+                if (currencyFrom != 'From') {
                     //Set Currency Conversion Parameter to be sent to the API
                     conversionParams = `${currencyFrom}_${currencyTo}`;
                     //Set Currency Conversion Parameter to get the Inverse Rate of the Currency
@@ -158,9 +165,9 @@ window.addEventListener('load', () => {
                         exchangeRateOutput.innerText = '';
                         exchangeRateInverseOutput.innerText = '';
 
-                            if(navigator.onLine) { 
+                            if (navigator.onLine) { 
                                 /*
-                                *  Get the Exchange Rate
+                                *  Get the Exchange Rate from API
                                 */
                                 calculateExchangeRate(conversionParams, conversionParamsInverse)                                
                                     .then((rates) => {       
@@ -172,11 +179,14 @@ window.addEventListener('load', () => {
         
                                         //Load Previous Rates
                                         loadOldRates();
-        
                                     });
+
                             } else {
+                                /*
+                                *  Get the Exchange Rate from IndexedDB
+                                */
                                 idbDb.get('rates', conversionParams)
-                                    .then(oldRates => {
+                                    .then((oldRates) => {
                                         exchangeRate = oldRates.rates.rate;
                                         exchangeRateInverse = oldRates.rates.inverse;
             

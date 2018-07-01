@@ -1,7 +1,6 @@
 "use strict";
 
-const dbPromise = idb.open('currenci', 1, upgradeDb => {
-    console.log('creating DB');
+const dbPromise = idb.open('currenci', 1, (upgradeDb) => {
     switch (upgradeDb.oldVersion) {
         case 0:
             if (!upgradeDb.objectStoreNames.contains('rates')) {
@@ -17,27 +16,27 @@ const dbPromise = idb.open('currenci', 1, upgradeDb => {
 
 const idbDb = {
     get(objectStore, key) {
-      return dbPromise.then(db => {
+      return dbPromise.then((db) => {
         return db.transaction(objectStore)
           .objectStore(objectStore).get(key);
       });
     },
     set(objectStore, val) {
-      return dbPromise.then(db => {
+      return dbPromise.then((db) => {
         const tx = db.transaction(objectStore, 'readwrite');
         tx.objectStore(objectStore).put(val);
         return tx.complete;
       });
     },
     delete(objectStore, key) {
-      return dbPromise.then(db => {
+      return dbPromise.then((db) => {
         const tx = db.transaction(objectStore, 'readwrite');
         tx.objectStore(objectStore).delete(key);
         return tx.complete;
       });
     },
     clear(objectStore) {
-      return dbPromise.then(db => {
+      return dbPromise.then((db) => {
         const tx = db.transaction(objectStore, 'readwrite');
         tx.objectStore(objectStore).clear();
         return tx.complete;
@@ -50,14 +49,14 @@ const idbDb = {
         });
     },
     keys(objectStore) {
-      return dbPromise.then(db => {
+      return dbPromise.then((db) => {
         const tx = db.transaction(objectStore);
         const keys = [];
         const store = tx.objectStore(objectStore);
   
         // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
         // openKeyCursor isn't supported by Safari, so we fall back
-        (store.iterateKeyCursor || store.iterateCursor).call(store, cursor => {
+        (store.iterateKeyCursor || store.iterateCursor).call((store, cursor) => {
           if (!cursor) return;
           keys.push(cursor.key);
           cursor.continue();

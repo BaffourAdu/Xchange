@@ -1,15 +1,20 @@
 /**
+ * Populates Currency Selects Inputs with 
+ * Currencies from the DB
  * 
  * @param {*} currencyFromSelector 
  * @param {*} currencyToSelector 
  */
 const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
-    
+    /**
+     * Get ALl Currencies from IndexedDB,
+     * If internet is available, Update Currency List
+     */
     idbDb.getAll('currencies')
-        .then(currencies => {
+        .then((currencies) => {
 
-            for (let currency in currencies){
-                            
+            for (let currency in currencies) {
+           
                 let currencyName = currencies[currency].data.name;
                 let currencyValue = currencies[currency].name;
 
@@ -26,6 +31,7 @@ const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
                 currencyToSelector.add(toSelectorNewOption);
                 
             }
+
         });
 
     if(navigator.onLine) { 
@@ -38,13 +44,15 @@ const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
 
 
 /**
+ * Gets Currecy rates and Performs Convertion
+ * and save its for offline Use
  * 
  * @param {*} conversionParams 
  */
 const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
 
     return getExchangeRate(conversionParams, conversionParamsInverse)
-        .then(function (response) {
+        .then((response) => {
             const responseRate = response.data.results[conversionParams].val;
             const apiRate = responseRate.toFixed(3);
 
@@ -61,7 +69,7 @@ const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
             const rateData = {
                     currencies: conversionParams,
                     rates
-                };
+            };
             
             // Make a request to delete the specified record out of the object store
             idbDb.delete('rates', conversionParams);
@@ -71,11 +79,16 @@ const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
 
             return [apiRate, apiRateInverse];
         })
-        .catch(function (error) {
+        .catch((error) => {
             console.log(error);
         });
 };
 
+
+/**
+ * Gets all Rates or Convertions from the Database
+ * for offline Use
+ */
 const loadOldRates = () => {
     // get the reference for the body
     const tableBody = document.querySelector('.old-rates');
@@ -85,7 +98,8 @@ const loadOldRates = () => {
     }
 
     idbDb.getAll('rates')
-        .then(oldRates => {
+        .then((oldRates) => {
+            
             for (let rate in oldRates){
 
                 const dataRow = document.createElement('tr');
@@ -107,13 +121,15 @@ const loadOldRates = () => {
                 dataRow.appendChild(cell3);
                 
 
-                tableBody.appendChild(dataRow); 
-                                
+                tableBody.appendChild(dataRow);                   
             }
+
         });
 };
 
+
 /**
+ * Make API Call and return a promise with results 
  * 
  * @param {*} conversionParams 
  */
@@ -125,21 +141,24 @@ const getExchangeRate = (conversionParams, conversionParamsInverse) => {
 
 
 /**
+ * Clears all old currencies in the DB, 
+ * then makes an API call and updates all 
+ * Currencies in the DB
  * 
  * @param {*} conversionParams 
  */
-const storeCurrencies = (conversionParams) =>{
+const storeCurrencies = (conversionParams) => {
 
     //Deete All Stored Currencies for new record to be saved
     idbDb.clear('currencies');
 
     return axios.get(`${baseUrl}/currencies`)
-                .then(function (response) {
+                .then((response) => {
                     const currencies = response.data.results;
                     
                     const sortedCurrencies = sortObj(currencies, 'asc');
 
-                    for (let currency in sortedCurrencies){
+                    for (let currency in sortedCurrencies) {
                         
                         let currencyName = currencies[currency].currencyName;
 
@@ -152,18 +171,19 @@ const storeCurrencies = (conversionParams) =>{
                         let currencyData = {
                                 name: currency,
                                 data
-                            };
+                        };
 
                         //Store in IndexedDB
                         idbDb.set('currencies', currencyData);
                     }
 
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     console.log(error);
                     return false;
                 });
 };
+
 
 /**
 * Sort JavaScript Object
@@ -172,32 +192,30 @@ const storeCurrencies = (conversionParams) =>{
 * order = 'asc' or 'desc'
 */
 const sortObj = ( obj, order ) => {
+    let key,
+        tempArry = [],
+        i,
+        tempObj = {};
 
-
-let key,
-    tempArry = [],
-    i,
-    tempObj = {};
-
-for ( key in obj ) {
-    tempArry.push(key);
-}
-
-tempArry.sort(
-    (a, b) => {
-        return a.toLowerCase().localeCompare( b.toLowerCase() );
+    for ( key in obj ) {
+        tempArry.push(key);
     }
-);
 
-if( order === 'desc' ) {
-    for ( i = tempArry.length - 1; i >= 0; i-- ) {
-        tempObj[ tempArry[i] ] = obj[ tempArry[i] ];
-    }
-} else {
-    for ( i = 0; i < tempArry.length; i++ ) {
-        tempObj[ tempArry[i] ] = obj[ tempArry[i] ];
-    }
-}
+    tempArry.sort(
+        (a, b) => {
+            return a.toLowerCase().localeCompare( b.toLowerCase() );
+        }
+    );
 
-return tempObj;
+    if( order === 'desc' ) {
+        for ( i = tempArry.length - 1; i >= 0; i-- ) {
+            tempObj[ tempArry[i] ] = obj[ tempArry[i] ];
+        }
+    } else {
+        for ( i = 0; i < tempArry.length; i++ ) {
+            tempObj[ tempArry[i] ] = obj[ tempArry[i] ];
+        }
+    }
+
+    return tempObj;
 };
