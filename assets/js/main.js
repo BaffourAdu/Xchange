@@ -142,7 +142,7 @@ window.addEventListener('load', () => {
 
                 } else {
                     exchangeRate = null;
-                    exchangeRateInverse= = null;
+                    exchangeRateInverse =  null;
 
                     exchangeRateOutput.innerText = ' ';
                     exchangeRateInverseOutput.innerText = ' ';
