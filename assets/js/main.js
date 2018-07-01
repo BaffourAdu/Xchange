@@ -15,6 +15,9 @@ window.addEventListener('load', () => {
     window.addEventListener('offline', () => {
         document.querySelector('.connectivity-status').innerText = 'You are offline';
     });
+
+    //Load Previous Rates
+    loadOldRates();
     
     /*
     * Set initial Varibales & get all Inputs And assign them variables
@@ -96,15 +99,28 @@ window.addEventListener('load', () => {
 
                    exchangeRateOutput.innerText = '';
                    exchangeRateInverseOutput.innerText = '';
+
+                   if(navigator.onLine) { 
+                        /*
+                        *  Get the Exchange Rate
+                        */
+                        calculateExchangeRate(conversionParams, conversionParamsInverse)                                
+                            .then((rates) => {       
+                                exchangeRate = rates[0];
+                                exchangeRateInverse = rates[1];
+
+                                exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${rates[0].toString()} ${currencyTo}`;
+                                exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${rates[1].toString()} ${currencyFrom}`;
+
+                                //Load Previous Rates
+                                loadOldRates();
+
+                            });
+                    } else {
+                        
+                    }
                     
-                   /*
-                    *  Get the Exchange Rate
-                    */
-                   calculateExchangeRate(conversionParams, conversionParamsInverse)                                
-                   .then((rate) => {       
-                            exchangeRate = rate;
-                            exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${rate.toString()} ${currencyTo}`;
-                        });
+
 
                 }
 
@@ -135,14 +151,17 @@ window.addEventListener('load', () => {
                             *  Get the Exchange Rate
                             */
                             calculateExchangeRate(conversionParams, conversionParamsInverse)                                
-                            .then((rates) => {       
-                                exchangeRate = rates[0];
-                                exchangeRateInverse = rates[1];
+                                .then((rates) => {       
+                                    exchangeRate = rates[0];
+                                    exchangeRateInverse = rates[1];
 
-                                exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${rates[0].toString()} ${currencyTo}`;
-                                exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${rates[1].toString()} ${currencyFrom}`;
+                                    exchangeRateOutput.innerText = `1 ${currencyFrom} -> ${rates[0].toString()} ${currencyTo}`;
+                                    exchangeRateInverseOutput.innerText = `1 ${currencyTo} -> ${rates[1].toString()} ${currencyFrom}`;
 
-                            });
+                                    //Load Previous Rates
+                                    loadOldRates();
+
+                                });
                     
                         }
                         

@@ -6,34 +6,32 @@
 const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
     
     idbDb.getAll('currencies')
-    .then(currencies => {
+        .then(currencies => {
 
-        for (let currency in currencies){
-                        
-            let currencyName = currencies[currency].data.name;
-            let currencyValue = currencies[currency].name;
+            for (let currency in currencies){
+                            
+                let currencyName = currencies[currency].data.name;
+                let currencyValue = currencies[currency].name;
 
-            let fromSelectorNewOption = document.createElement('option'),
-            toSelectorNewOption = document.createElement('option');
+                let fromSelectorNewOption = document.createElement('option'),
+                toSelectorNewOption = document.createElement('option');
 
-            fromSelectorNewOption.value =  currencyValue;
-            fromSelectorNewOption.text = currencyName;
+                fromSelectorNewOption.value =  currencyValue;
+                fromSelectorNewOption.text = currencyName;
 
-            toSelectorNewOption.value = currencyValue;
-            toSelectorNewOption.text = currencyName;
+                toSelectorNewOption.value = currencyValue;
+                toSelectorNewOption.text = currencyName;
 
-            currencyFromSelector.add(fromSelectorNewOption);
-            currencyToSelector.add(toSelectorNewOption);
-            
-        }
-    });
+                currencyFromSelector.add(fromSelectorNewOption);
+                currencyToSelector.add(toSelectorNewOption);
+                
+            }
+        });
 
     if(navigator.onLine) { 
         //If Internet Is avaliable Update Currency List
-        getCurrencies();
+        storeCurrencies();
     }
-    
-
 
     return true;
 };
@@ -48,19 +46,69 @@ const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
     return getExchangeRate(conversionParams, conversionParamsInverse)
         .then(function (response) {
             const responseRate = response.data.results[conversionParams].val;
-            const rate = responseRate.toFixed(3);
+            const apiRate = responseRate.toFixed(3);
 
             const responseRateInverse = response.data.results[conversionParamsInverse].val;
-            const rateInverse = responseRateInverse.toFixed(3);
+            const apiRateInverse = responseRateInverse.toFixed(3);
 
-            return [rate, rateInverse];
+            const rates = {
+                currencies: conversionParams,
+                rate: apiRate,
+                inverse: apiRateInverse,
+                created: new Date().getTime()
+            };
+
+            const rateData = {
+                    currencies: conversionParams,
+                    rates
+                };
+
+            //Store in IndexedDB
+            idbDb.set('rates', rateData);
+
+            return [apiRate, apiRateInverse];
         })
         .catch(function (error) {
             console.log(error);
         });
-}
+};
+
+const loadOldRates = () => {
+    // get the reference for the body
+    const tableBody = document.querySelector('.old-rates');
+    
+    while (tableBody.hasChildNodes()) {
+        tableBody.removeChild(tableBody.firstChild);
+    }
+
+    idbDb.getAll('rates')
+        .then(oldRates => {
+            for (let rate in oldRates){
+
+                const dataRow = document.createElement('tr');
+
+                const cell1 = document.createElement("td");
+                const cellText1 = document.createTextNode(oldRates[rate].rates.currencies);
+                cell1.appendChild(cellText1);
+                dataRow.appendChild(cell1);
+
+                const cell2 = document.createElement("td");
+                const cellText2 = document.createTextNode(oldRates[rate].rates.rate);
+                cell2.appendChild(cellText2);
+                dataRow.appendChild(cell2);
 
 
+                const cell3 = document.createElement("td");
+                const cellText3 = document.createTextNode(oldRates[rate].rates.inverse);
+                cell3.appendChild(cellText3);
+                dataRow.appendChild(cell3);
+                
+
+                tableBody.appendChild(dataRow); 
+                                
+            }
+        });
+};
 
 /**
  * 
@@ -77,7 +125,7 @@ const getExchangeRate = (conversionParams, conversionParamsInverse) => {
  * 
  * @param {*} conversionParams 
  */
-const getCurrencies = (conversionParams) =>{
+const storeCurrencies = (conversionParams) =>{
 
 return axios.get(`${baseUrl}/currencies`)
                 .then(function (response) {

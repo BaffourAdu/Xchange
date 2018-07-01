@@ -104,43 +104,19 @@
             <div class="col-12 col-sm-12 col-md-8 offset-md-2">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title" style="margin-bottom: 0px;font-weight:500; font-size:18px;">Previous Xchanges</h5>
+                        <h5 class="card-title" style="margin-bottom: 0px;font-weight:500; font-size:18px;">Last Xchange Rates</h5>
                     </div>
                     <div class="card-body">
                             <table class="table">
                                 <thead class="thead">
                                     <tr>
-                                        <th scope="col">From</th>
-                                        <th scope="col">To</th>
-                                        <th scope="col">Rate / Inverse</th>
+                                        <th scope="col">Currency</th>
+                                        <th scope="col">Rate</th>
+                                        <th scope="col">Inverse</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>USD 700</td>
-                                        <td>GHS 550</td>
-                                        <td>4.755 / 0.255</td>
-                                    </tr>
-                                    <tr>
-                                        <td>USD 700</td>
-                                        <td>GHS 550</td>
-                                        <td>4.755 / 0.255</td>
-                                    </tr>
-                                    <tr>
-                                        <td>GHS 700</td>
-                                        <td>USD 550</td>
-                                        <td>4.755 / 0.255</td>
-                                    </tr>
-                                    <tr>
-                                        <td>GHS 700</td>
-                                        <td>USD 550</td>
-                                        <td>4.755 / 0.255</td>
-                                    </tr>
-                                    <tr>
-                                        <td>GHS 700</td>
-                                        <td>USD 550</td>
-                                        <td>4.755 / 0.255</td>
-                                    </tr>
+                                <tbody class='old-rates'>
+                                    
                                 </tbody>
                         </table>
                     </div>
@@ -149,11 +125,6 @@
         </div>
     </section>
 
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="./assets/js/idb.js"></script>
-    <script src="./assets/js/db.js"></script>
-    <script src="./assets/js/helpers.js"></script>
-    <script src="./assets/js/main.js"></script>
     <script>
         
         window.addEventListener('load', () => { 
@@ -174,9 +145,15 @@
                 console.log('This browser doesn\'t support IndexedDB');
                 return;
             }
-
+            
         });
         
     </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./assets/js/idb.js"></script>
+    <script src="./assets/js/db.js"></script>
+    <script src="./assets/js/helpers.js"></script>
+    <script src="./assets/js/main.js"></script>
+
 </body>
 </html>
