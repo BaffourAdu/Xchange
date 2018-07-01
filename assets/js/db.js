@@ -44,7 +44,7 @@ const idbDb = {
       });
     },
     getAll(objectStore) {
-        dbPromise.then(db => {
+        return dbPromise.then(db => {
             return db.transaction(objectStore)
               .objectStore(objectStore).getAll();
         });
