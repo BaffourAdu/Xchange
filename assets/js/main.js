@@ -204,6 +204,12 @@ window.addEventListener('load', () => {
                                     });
                             }
                     
+                        } else {
+                            exchangeRate = null;
+                            exchangeRateInverse =  null;
+        
+                            exchangeRateOutput.innerText = ' ';
+                            exchangeRateInverseOutput.innerText = ' ';
                         }
                         
                     document.querySelector('.status').innerText = 'Please type amount you wish to exchange';
