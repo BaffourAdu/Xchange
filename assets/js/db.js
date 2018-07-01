@@ -29,7 +29,7 @@ const idbDb = {
         return tx.complete;
       });
     },
-    delete(objectStore,key) {
+    delete(objectStore, key) {
       return dbPromise.then(db => {
         const tx = db.transaction(objectStore, 'readwrite');
         tx.objectStore(objectStore).delete(key);

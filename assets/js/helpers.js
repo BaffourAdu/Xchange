@@ -62,6 +62,9 @@ const calculateExchangeRate = (conversionParams, conversionParamsInverse) => {
                     currencies: conversionParams,
                     rates
                 };
+            
+            // Make a request to delete the specified record out of the object store
+            idbDb.delete('rates', conversionParams);
 
             //Store in IndexedDB
             idbDb.set('rates', rateData);
@@ -127,7 +130,10 @@ const getExchangeRate = (conversionParams, conversionParamsInverse) => {
  */
 const storeCurrencies = (conversionParams) =>{
 
-return axios.get(`${baseUrl}/currencies`)
+    //Deete All Stored Currencies for new record to be saved
+    idbDb.clear('currencies');
+
+    return axios.get(`${baseUrl}/currencies`)
                 .then(function (response) {
                     const currencies = response.data.results;
                     

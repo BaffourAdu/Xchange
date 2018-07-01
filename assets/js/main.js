@@ -177,7 +177,6 @@ window.addEventListener('load', () => {
                             } else {
                                 idbDb.get('rates', conversionParams)
                                     .then(oldRates => {
-            
                                         exchangeRate = oldRates.rates.rate;
                                         exchangeRateInverse = oldRates.rates.inverse;
             
