@@ -4,50 +4,38 @@
  * @param {*} currencyToSelector 
  */
 const populateCurrencies = (currencyFromSelector, currencyToSelector) => {
-            
-    currencies().then(function (response) {
-        const currencies = response.data.results;
-        
-        const sortedCurrencies = sortObj( currencies, 'asc');
+    
+    idbDb.getAll('currencies')
+    .then(currencies => {
 
-        for (let currency in sortedCurrencies){
-            
-            let data = {
-                name: currency,
-                created: new Date().getTime()
-            };
-
-            let currencyData = {data};
-            let currencyName = sortedCurrencies[currency].currencyName;
-            let currencySymbol = sortedCurrencies[currency].currencySymbol;
-
-
-            //Store in IndexedDB
-            idbDb.set('currency', currencyData);
+        for (let currency in currencies){
+                        
+            let currencyName = currencies[currency].data.name;
+            let currencyValue = currencies[currency].name;
 
             let fromSelectorNewOption = document.createElement('option'),
-                toSelectorNewOption = document.createElement('option');
+            toSelectorNewOption = document.createElement('option');
 
-            fromSelectorNewOption.value = currency;
-            fromSelectorNewOption.text = `${currency} - ${currencyName}`;
+            fromSelectorNewOption.value =  currencyValue;
+            fromSelectorNewOption.text = currencyName;
 
-            toSelectorNewOption.value = currency;
-            toSelectorNewOption.text = currency;
+            toSelectorNewOption.value = currencyValue;
+            toSelectorNewOption.text = currencyName;
 
             currencyFromSelector.add(fromSelectorNewOption);
             currencyToSelector.add(toSelectorNewOption);
-
-       }
-
-        idbDb.getAll('currency').then(convertions => console.log(convertions));
-
-    })
-    .catch(function (error) {
-        console.log(error);
-        return false;
+            
+        }
     });
 
-return true;
+    if(navigator.onLine) { 
+        //If Internet Is avaliable Update Currency List
+        getCurrencies();
+    }
+    
+
+
+    return true;
 };
 
 
@@ -89,10 +77,38 @@ const getExchangeRate = (conversionParams, conversionParamsInverse) => {
  * 
  * @param {*} conversionParams 
  */
-const currencies = (conversionParams) =>{
+const getCurrencies = (conversionParams) =>{
 
-return axios.get(`${baseUrl}/currencies`);
+return axios.get(`${baseUrl}/currencies`)
+                .then(function (response) {
+                    const currencies = response.data.results;
+                    
+                    const sortedCurrencies = sortObj(currencies, 'asc');
 
+                    for (let currency in sortedCurrencies){
+                        
+                        let currencyName = currencies[currency].currencyName;
+
+                        let data = {
+                            name: `${currency}- ${currencyName}`,
+                            value: currency,
+                            created: new Date().getTime()
+                        };
+
+                        let currencyData = {
+                                name: currency,
+                                data
+                            };
+
+                        //Store in IndexedDB
+                        idbDb.set('currencies', currencyData);
+                    }
+
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    return false;
+                });
 };
 
 /**

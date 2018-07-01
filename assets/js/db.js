@@ -4,13 +4,12 @@ const dbPromise = idb.open('currenci', 1, upgradeDb => {
     console.log('creating DB');
     switch (upgradeDb.oldVersion) {
         case 0:
-            if (!upgradeDb.objectStoreNames.contains('convertion')) {
-                const convertionStore = upgradeDb.createObjectStore('convertion', { keyPath: 'id', autoIncrement:true });
+            if (!upgradeDb.objectStoreNames.contains('rates')) {
+                const convertionStore = upgradeDb.createObjectStore('rates', { keyPath: 'id', autoIncrement:true });
                 convertionStore.createIndex('id', 'id', { unique: true });
             }
-            if (!upgradeDb.objectStoreNames.contains('currency')) {
-                const currencyStore = upgradeDb.createObjectStore('currency', { keyPath: 'id', autoIncrement:true });
-                currencyStore.createIndex('id', 'id', { unique: true });
+            if (!upgradeDb.objectStoreNames.contains('currencies')) {
+                const currencyStore = upgradeDb.createObjectStore('currencies', { keyPath: 'name', autoIncrement:true });
                 currencyStore.createIndex('name', 'name', { unique: true });
             }  
     }
